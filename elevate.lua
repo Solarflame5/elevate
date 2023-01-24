@@ -18,13 +18,17 @@ end
 
 local targetfloor
 local ylevel
+local sensed
 
 while true do
     write("Enter destination floor: ")
     targetfloor = io.read()
     targetfloor = tonumber(targetfloor)
     while true do
-        ylevel = floors[targetfloor][1].sense()[1]["y"]
+        sensed = floors[targetfloor][1].sense()
+        if #sensed > 0 then
+            ylevel = sensed[1]["y"]
+        end
         if math.floor(ylevel+0.5) == 0 then
         floors[targetfloor][2].setOutput("up", true)
         sleep(0.2)
