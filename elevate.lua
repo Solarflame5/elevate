@@ -1,6 +1,6 @@
 local floorsetup = {
-    {"manipulator_0", "redstone_integrator_0"},
-    {"manipulator_1", "redstone_integrator_1"}
+    {"manipulator_41", "redstone_integrator_193"},
+    {"manipulator_42", "redstone_integrator_195"}
 }
 
 local floors = {}
@@ -25,15 +25,26 @@ while true do
     targetfloor = io.read()
     targetfloor = tonumber(targetfloor)
     while true do
+        local suc = false
         sensed = floors[targetfloor][1].sense()
-        if #sensed > 0 then
-            ylevel = sensed[1]["y"]
+        for i, entity in ipairs(sensed) do
+            if entity.key == "minecraft:player" then
+                if #sensed > 0 then
+                    ylevel = sensed[i]["y"]
+                end
+                if math.floor(ylevel+0.5) == 0 then
+                    floors[targetfloor][2].setOutput("up", true)
+                    sleep(0.2)
+                    floors[targetfloor][2].setOutput("up", false)
+                    suc = true
+                    break
+                end
+            end
         end
-        if math.floor(ylevel+0.5) == 0 then
-        floors[targetfloor][2].setOutput("up", true)
-        sleep(0.2)
-        floors[targetfloor][2].setOutput("up", false)
-        break
+        if suc then
+            break
+        else
+            sleep(0.1)
         end
     end
 end
